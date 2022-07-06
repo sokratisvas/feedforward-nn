@@ -19,5 +19,6 @@ Matrix* add(Matrix* matrix1, Matrix* matrix2);
 Matrix* subtract(Matrix* matrix1, Matrix* matrix2);
 Matrix* multiply(Matrix* matrix1, Matrix* matrix2);
 Matrix* transpose(Matrix* matrix);
+Matrix* multiply_by_scalar(Matrix* matrix, double scalar);
 
 #endif

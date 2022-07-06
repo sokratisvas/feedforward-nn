@@ -133,21 +133,14 @@ Matrix* transpose(Matrix* matrix){
     return matrix_transpose;
 }
 
-/*
-int main() {
-double d4[4] = {4.7, 3.4, 3.4, 7.9};         
-double d5[2] = {1.2, 1.4};          
-Matrix* m1 = initialise_matrix(2, 2, 4, d4);          
-Matrix* m2 = initialise_matrix(2, 1, 2, d5);          
-Matrix* actual = multiply(m1, m2);
-print_dims(actual);   
-print_matrix(actual);
+Matrix* multiply_by_scalar(Matrix* matrix, double scalar) {
+    Matrix* scaled_matrix = new_matrix(matrix->rows, matrix->columns);
+    for (int i = 0; i < matrix->rows; i++) {
+        for (int j = 0; j < matrix->columns; j++) {
+            scaled_matrix->data[index_at(i, j, scaled_matrix)] = scalar * matrix->data[index_at(i, j, matrix)];
+        }
+    }
 
-delete_matrix(m1);
-delete_matrix(m2);    
-delete_matrix(actual);  
-    return 0;
+    return scaled_matrix;
+
 }
-*/
-
-

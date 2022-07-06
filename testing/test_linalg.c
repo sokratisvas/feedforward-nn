@@ -100,7 +100,22 @@ int main() {
                10.66, 43.46, 71.34, 32.8};
     expected = initialise_matrix(4, 4, 16, d11);
     test(expected, actual, 4);
+    
+    delete_matrix(m1);
+    delete_matrix(actual);
+    delete_matrix(expected);
+    
+    double d12[4] = {2, 5, 3.3, 8.6};
+    m1 = initialise_matrix(2, 2, 4, d12);
+    double d13[4] = {4, 10, 6.6, 17.2};
+    expected = initialise_matrix(2, 2, 4, d13);
+    actual = multiply_by_scalar(m1, 2);
+    test(expected, actual, 5);
 
+    delete_matrix(m1);
+    delete_matrix(actual);
+    delete_matrix(expected);
+    
     return 0;
 }
    
