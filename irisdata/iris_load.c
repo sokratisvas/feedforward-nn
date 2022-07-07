@@ -3,19 +3,24 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <string.h>
+#include <time.h>
 #include "../src/linalg.h"
+#include "../irisdata/iris_load.h"
 
-#define TRAIN_DATA 105
-#define TEST_DATA 45
+void shuffle_train_data(int *data, int data_size) {
+    for (int i = 0; i < data_size; i++) {
+        int temp_idx = rand() % data_size;
+        int temp = data[temp_idx];
+        data[temp_idx] = data[i];
+        data[i] = temp;
+    }
+}
 
-enum Species {
-    SETOSA, VERSICOLOR, VIRGINICA
-};
-
-int main() {
-    
-    //Matrix* train_input = new_matrix(150, 4);
-    //Matrix* train_output = new_matrix(150, 1);
+void load_train_test_data(Matrix* X_train, Matrix* Y_train, Matrix* X_test, Matrix* Y_test) {
+    double input_train_data[TRAIN_SIZE][4];
+    double output_train_data[TRAIN_SIZE];   
+    double input_test_data[TEST_SIZE][4];
+    double output_test_data[TEST_SIZE];
 
     double sepal_length[150];
     double sepal_width[150];
@@ -83,9 +88,106 @@ int main() {
             species[i] = VIRGINICA;
         }
 
-        printf("Line %d: %f, %f, %f, %f, %d\n", i + 1, sepal_length[i], sepal_width[i], 
-                                                petal_length[i], petal_width[i], species[i]);
+        // printf("Line %d: %f, %f, %f, %f, %d\n", i + 1, sepal_length[i], sepal_width[i], 
+        //                                        petal_length[i], petal_width[i], species[i]);
     }
+
+    bool total_data[150];
+    int test_data[TEST_SIZE];
+    int train_data[TRAIN_SIZE];
+    int train_setosa[50];
+    int train_versicolor[50];
+    int train_virginica[50];
+
+    for (int i = 0; i < 50; i++) {
+        train_setosa[i] = i;
+        train_versicolor[i] = 50 + i;
+        train_virginica[i] = 100 + i;
+    }
+
+    shuffle_train_data(train_setosa, 50);
+    shuffle_train_data(train_versicolor, 50);
+    shuffle_train_data(train_virginica, 50);
+    
+    for(int i = 0; i < TRAIN_SIZE; i++) {
+        if (i <= 34) {
+            train_data[i] = train_setosa[i];
+        } else if (i >= 35 && i <= 69) {
+            train_data[i] = train_versicolor[i - 35];
+        } else{
+            train_data[i] = train_virginica[i - 70];
+        }
+    }
+    
+    shuffle_train_data(train_data, TRAIN_SIZE);
+    
+    for (int i = 0; i < 150; i++) {
+        total_data[i] = 0;
+    }
+
+    for (int i = 0; i < 150; i++) {
+        total_data[train_data[i]] = 1;
+    }
+    
+    int test_idx = 0;
+    for (int i = 0; i < 150; i++) {
+        if (!total_data[i]) {
+            test_data[test_idx] = i;
+            test_idx++;
+        }
+    }
+
+    shuffle_train_data(test_data, TEST_SIZE);
+
+    for (int i = 0; i < TRAIN_SIZE; i++) {
+        input_train_data[i][0] = sepal_length[train_data[i]];
+        input_train_data[i][1] = sepal_width[train_data[i]]; 
+        input_train_data[i][2] = petal_length[train_data[i]];
+        input_train_data[i][3] = petal_width[train_data[i]];
+        output_train_data[i] = species[train_data[i]];
+    }
+
+    for (int i = 0; i < TEST_SIZE; i++) {
+        input_test_data[i][0] = sepal_length[test_data[i]];
+        input_test_data[i][1] = sepal_width[test_data[i]]; 
+        input_test_data[i][2] = petal_length[test_data[i]];
+        input_test_data[i][3] = petal_width[test_data[i]];
+        output_test_data[i] = species[test_data[i]];
+    }
+
+    double input_train_vectorized[4 * TRAIN_SIZE];
+    double input_test_vectorized[4 * TEST_SIZE];
+    
+    int len = 0;
+    for (int i = 0; i < TRAIN_SIZE; i++) {
+        for (int j = 0; j < 4; j++) {
+            input_train_vectorized[len++] = input_train_data[i][j];
+        }
+    }
+    
+    len = 0;
+    for (int i = 0; i < TEST_SIZE; i++) {
+        for (int j = 0; j < 4; j++) {
+            input_test_vectorized[len++] = input_test_data[i][j];
+        }
+    }
+    
+    copy_data(X_train, input_train_vectorized, 4 * TRAIN_SIZE);
+    copy_data(Y_train, output_train_data, TRAIN_SIZE);
+    copy_data(X_test, input_test_vectorized, 4 * TEST_SIZE);
+    copy_data(Y_test, output_test_data, TEST_SIZE);
+}
+
+/*
+int main() {
+    double input_train_data[TRAIN_SIZE][4];
+    int output_train_data[TRAIN_SIZE];
+    double input_test_data[TEST_SIZE][4];
+    int output_test_data[TEST_SIZE];
+
+    srand(time(NULL));
+    load_train_test_data(input_train_data, output_train_data, input_test_data, output_test_data);
 
     return 0;
 }
+*/

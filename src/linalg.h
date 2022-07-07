@@ -11,6 +11,7 @@ double rand_range(double lower, double upper);
 int index_at(int row, int column, Matrix* matrix);
 void print_dims(Matrix* matrix);
 void print_matrix(Matrix* matrix);
+void copy_data(Matrix* matrix, double* values, int values_size);
 Matrix* new_matrix(int rows, int columns);
 Matrix* new_random_matrix(int rows, int columns);
 Matrix* initialise_matrix(int rows, int columns, int total, double* values);

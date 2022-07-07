@@ -26,6 +26,13 @@ void print_matrix(Matrix* matrix) {
     }
 }
 
+void copy_data(Matrix* matrix, double* values, int values_size) {
+    assert(matrix->rows * matrix->columns == values_size);
+    for (int i = 0; i < values_size; i++) {
+        matrix->data[i] = values[i];
+    }
+}
+
 Matrix* new_matrix(int rows, int columns) {
     Matrix* matrix = malloc(sizeof(Matrix));
     matrix->rows = rows;
