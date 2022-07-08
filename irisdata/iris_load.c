@@ -18,9 +18,9 @@ void shuffle_train_data(int *data, int data_size) {
 
 void load_train_test_data(Matrix* X_train, Matrix* Y_train, Matrix* X_test, Matrix* Y_test) {
     double input_train_data[TRAIN_SIZE][4];
-    double output_train_data[TRAIN_SIZE];   
+    double output_train_data[TRAIN_SIZE][3];   
     double input_test_data[TEST_SIZE][4];
-    double output_test_data[TEST_SIZE];
+    double output_test_data[TEST_SIZE][3];
 
     double sepal_length[150];
     double sepal_width[150];
@@ -144,7 +144,10 @@ void load_train_test_data(Matrix* X_train, Matrix* Y_train, Matrix* X_test, Matr
         input_train_data[i][1] = sepal_width[train_data[i]]; 
         input_train_data[i][2] = petal_length[train_data[i]];
         input_train_data[i][3] = petal_width[train_data[i]];
-        output_train_data[i] = species[train_data[i]];
+        
+        for (int j = 0; j < 3; j++) {
+            output_train_data[i][j] = (j == species[train_data[i]]) ? 1:0;
+        }
     }
 
     for (int i = 0; i < TEST_SIZE; i++) {
@@ -152,11 +155,16 @@ void load_train_test_data(Matrix* X_train, Matrix* Y_train, Matrix* X_test, Matr
         input_test_data[i][1] = sepal_width[test_data[i]]; 
         input_test_data[i][2] = petal_length[test_data[i]];
         input_test_data[i][3] = petal_width[test_data[i]];
-        output_test_data[i] = species[test_data[i]];
+
+        for (int j = 0; j < 3; j++) {
+            output_test_data[i][j] = (j == species[test_data[i]]) ? 1:0;
+        }
     }
 
     double input_train_vectorized[4 * TRAIN_SIZE];
     double input_test_vectorized[4 * TEST_SIZE];
+    double output_train_vectorized[3 * TRAIN_SIZE];
+    double output_test_vectorized[3 * TEST_SIZE];
     
     int len = 0;
     for (int i = 0; i < TRAIN_SIZE; i++) {
@@ -164,18 +172,32 @@ void load_train_test_data(Matrix* X_train, Matrix* Y_train, Matrix* X_test, Matr
             input_train_vectorized[len++] = input_train_data[i][j];
         }
     }
-    
+
+    len = 0;
+    for (int i = 0; i < TRAIN_SIZE; i++) {
+        for (int j = 0; j < 3; j++) {
+            output_train_vectorized[len++] = output_train_data[i][j];
+        }
+    }
+
     len = 0;
     for (int i = 0; i < TEST_SIZE; i++) {
         for (int j = 0; j < 4; j++) {
             input_test_vectorized[len++] = input_test_data[i][j];
         }
     }
-    
+
+    len = 0;
+    for (int i = 0; i < TEST_SIZE; i++) {
+        for (int j = 0; j < 3; j++) {
+            output_test_vectorized[len++] = output_test_data[i][j];
+        }
+    }
+
     copy_data(X_train, input_train_vectorized, 4 * TRAIN_SIZE);
-    copy_data(Y_train, output_train_data, TRAIN_SIZE);
+    copy_data(Y_train, output_train_vectorized, 3 * TRAIN_SIZE);
     copy_data(X_test, input_test_vectorized, 4 * TEST_SIZE);
-    copy_data(Y_test, output_test_data, TEST_SIZE);
+    copy_data(Y_test, output_test_vectorized, 3 * TEST_SIZE);
 }
 
 /*

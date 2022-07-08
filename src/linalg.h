@@ -16,10 +16,13 @@ Matrix* new_matrix(int rows, int columns);
 Matrix* new_random_matrix(int rows, int columns);
 Matrix* initialise_matrix(int rows, int columns, int total, double* values);
 void delete_matrix(Matrix* matrix);
+Matrix* get_column(int column, Matrix* matrix);
 Matrix* add(Matrix* matrix1, Matrix* matrix2);
 Matrix* subtract(Matrix* matrix1, Matrix* matrix2);
 Matrix* multiply(Matrix* matrix1, Matrix* matrix2);
 Matrix* transpose(Matrix* matrix);
 Matrix* multiply_by_scalar(Matrix* matrix, double scalar);
+int get_max_row(Matrix* matrix);
+Matrix* multiply_elementwise(Matrix* matrix1, Matrix* matrix2);
 
 #endif
