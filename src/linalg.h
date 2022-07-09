@@ -24,5 +24,6 @@ Matrix* transpose(Matrix* matrix);
 Matrix* multiply_by_scalar(Matrix* matrix, double scalar);
 int get_max_row(Matrix* matrix);
 Matrix* multiply_elementwise(Matrix* matrix1, Matrix* matrix2);
+Matrix* normalize(Matrix* matrix);
 
 #endif

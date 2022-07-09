@@ -180,3 +180,28 @@ Matrix* multiply_elementwise(Matrix* matrix1, Matrix* matrix2) {
     }
     return res;
 }
+
+Matrix* normalize(Matrix* matrix) {
+    assert(matrix->rows != 0 && matrix->columns != 0);
+    double max = matrix->data[index_at(0, 0, matrix)];
+    double min = matrix->data[index_at(0, 0, matrix)];
+    Matrix* res = new_matrix(matrix->rows, matrix->columns);
+    
+    for (int i = 0; i < res->rows; i++) {
+        for (int j = 0; j < res->columns; j++) {
+            max = (matrix->data[index_at(i, j, matrix)] > max) ? matrix->data[index_at(i, j, matrix)]:max;
+            min = (matrix->data[index_at(i, j, matrix)] < min) ? matrix->data[index_at(i, j, matrix)]:min;
+        }
+    }
+
+    for (int i = 0; i < res->rows; i++) {
+        for (int j = 0; j < res->columns; j++) {
+            res->data[index_at(i, j, matrix)] = -1 + 2 * (matrix->data[index_at(i, j, matrix)] - min) / (max - min);
+        }
+    }
+    return res;
+}
+
+
+
+
