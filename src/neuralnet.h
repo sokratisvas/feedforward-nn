@@ -5,7 +5,7 @@
 #define HIDDEN_LAYER_SIZE 10
 #define OUTPUT_LAYER_SIZE 3
 #define LEARNING_RATE 0.01
-#define EPOCHS 600
+#define EPOCHS 200
 
 typedef struct {
     int* neurons_per_layer;
@@ -19,8 +19,10 @@ void delete_neuralnet(NeuralNet* neuralnet);
 Matrix* activate_matrix(Matrix* matrix);
 Matrix* der_activate_matrix(Matrix* matrix);
 Matrix* softmax(Matrix* matrix);
+Matrix* der_softmax(Matrix* matrix);
 Matrix* get_prefirst_layer_output(NeuralNet* neuralnet, Matrix* input); // Before applying the activation function on the 1st layer
 Matrix* get_first_layer_output(NeuralNet* neuralnet, Matrix* input);
+Matrix* get_presecond_layer_output(NeuralNet* neuralnet, Matrix* act_first_layer_output);
 Matrix* get_second_layer_output(NeuralNet* neuralnet, Matrix* act_first_layer_output);
 double means_squared_method(Matrix* calculated_output, Matrix* output);
 double cross_entropy_method(Matrix* calculated_output, Matrix* output);
@@ -30,5 +32,4 @@ Matrix* get_delta_second_biases(NeuralNet* neuralnet, Matrix* delta_second_layer
 Matrix* get_delta_first_layer(NeuralNet* neuralnet, Matrix* first_layer_output, Matrix* delta_second_layer);
 Matrix* get_delta_first_weights(NeuralNet* neuralnet, Matrix* delta_first_layer, Matrix* input);
 Matrix* get_delta_first_biases(NeuralNet* neuralnet, Matrix* delta_first_layer);
-
 #endif

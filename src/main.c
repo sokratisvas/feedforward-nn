@@ -28,48 +28,48 @@ int main() {
     X_train = normalize(X_train);
     X_test = normalize(X_test);
 
+    int iter = 0;
+
     for (int j = 0; j < EPOCHS; j++) {
         for (int i = 0; i < TRAIN_SIZE; i++) {
-        // Feedforward
-        Matrix* input = get_column(i, X_train);
-        Matrix* output = get_column(i, Y_train);
-        
-        Matrix* prefirst_layer_output = get_prefirst_layer_output(neuralnet, input);
-        Matrix* first_layer_output = get_first_layer_output(neuralnet, input);
-        Matrix* calculated_output = get_second_layer_output(neuralnet, first_layer_output); 
-       
-        /*
-        if(i == 0 && j == 0) {
-            print_matrix(prefirst_layer_output);
-            printf("------------------------\n");
-            print_matrix(first_layer_output);
-        }
-        */
 
-        // Cost
-        double cost = means_squared_method(calculated_output, output);
-        int species_prediction = get_max_row(calculated_output);
-        int actual_species = get_max_row(output);
-        correct_predictions += (species_prediction == actual_species);
+            // Feedforward
+            iter++;
+            Matrix* input = get_column(i, X_train);
+            Matrix* output = get_column(i, Y_train);
+            
+            Matrix* prefirst_layer_output = get_prefirst_layer_output(neuralnet, input);
+            Matrix* first_layer_output = get_first_layer_output(neuralnet, input);
+            Matrix* presecond_layer_output = get_presecond_layer_output(neuralnet, first_layer_output);
+            Matrix* calculated_output = get_second_layer_output(neuralnet, first_layer_output); 
+           
+            // Cost
+            double cost = means_squared_method(calculated_output, output);
+            int species_prediction = get_max_row(calculated_output);
+            int actual_species = get_max_row(output);
+            correct_predictions += (species_prediction == actual_species);
 
-        if (i == 0 && j % 10 == 0) {
-            printf("Epoch: %d, cost = %lf\n", j, cost);
-        }
+            if (i == 0 && j % 10 == 0) {
+                printf("Epoch: %d, cost = %lf, accuracy = %lf\n", j, cost, 1.0 * correct_predictions / iter);
+            }
 
-        // Backprop
-        Matrix* delta_second_layer = get_delta_second_layer(calculated_output, output);
-        neuralnet->weights[1] = add(neuralnet->weights[1], get_delta_second_weights(neuralnet, delta_second_layer, first_layer_output));
-        neuralnet->biases[1] = add(neuralnet->biases[1], get_delta_second_biases(neuralnet, delta_second_layer));
+            // Backprop
+            Matrix* delta_second_layer = get_delta_second_layer(calculated_output, output);
+            Matrix* delta_first_layer = get_delta_first_layer(neuralnet, prefirst_layer_output, delta_second_layer);
+            Matrix* delta_second_weights = get_delta_second_weights(neuralnet, delta_second_layer, prefirst_layer_output);
+            Matrix* delta_second_biases = get_delta_second_biases(neuralnet, delta_second_layer);
+            Matrix* delta_first_weights = get_delta_first_weights(neuralnet, delta_first_layer, input);
+            Matrix* delta_first_biases = get_delta_first_biases(neuralnet, delta_first_layer);
 
-        Matrix* delta_first_layer = get_delta_first_layer(neuralnet, prefirst_layer_output, delta_second_layer);
-        neuralnet->weights[0] = add(neuralnet->weights[0], get_delta_first_weights(neuralnet, delta_first_layer, input));
-        neuralnet->biases[0] = add(neuralnet->biases[0], get_delta_first_biases(neuralnet, delta_first_layer));
+            neuralnet->weights[0] = add(neuralnet->weights[0], delta_first_weights);
+            neuralnet->biases[0] = add(neuralnet->biases[0], delta_first_biases);
+            neuralnet->weights[1] = add(neuralnet->weights[1], delta_second_weights);
+            neuralnet->biases[1] = add(neuralnet->biases[1], delta_second_biases);
 
-        //printf("Correct Predictions = %d\n", correct_predictions);
         }
         
         if(j == EPOCHS - 1) {
-            printf("accuracy = %lf\n", 1.0 * correct_predictions / (EPOCHS * TRAIN_SIZE));
+            printf("Training accuracy = %lf\n", 1.0 * correct_predictions / (EPOCHS * TRAIN_SIZE));
         }
     }
 
@@ -82,15 +82,14 @@ int main() {
         Matrix* calculated_output = get_second_layer_output(neuralnet, first_layer_output); 
         
         double cost = means_squared_method(calculated_output, output);
-        // printf("Rep %d, Cost %lf\n", i, cost);
         int species_prediction = get_max_row(calculated_output);
         int actual_species = get_max_row(output);
         correct_predictions += (species_prediction == actual_species);
 
     }
 
-    printf("Correct Predictions = %d\n", correct_predictions);
-    printf("Accuracy = %lf\n", 1.0 * correct_predictions / TEST_SIZE);
+    printf("Correct Test Predictions = %d\n", correct_predictions);
+    printf("Test Accuracy = %lf\n", 1.0 * correct_predictions / TEST_SIZE);
 
     return 0;
 }

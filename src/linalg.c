@@ -56,7 +56,7 @@ Matrix* new_random_matrix(int rows, int columns) {
     
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
-            matrix->data[index_at(i, j, matrix)] = rand_range(-1.0, 1.0);
+            matrix->data[index_at(i, j, matrix)] = rand_range(0.0, 1.0);
         }
     }
 
