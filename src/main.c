@@ -66,6 +66,18 @@ int main() {
             neuralnet->weights[1] = add(neuralnet->weights[1], delta_second_weights);
             neuralnet->biases[1] = add(neuralnet->biases[1], delta_second_biases);
 
+            delete_matrix(input);
+            delete_matrix(output);
+            delete_matrix(prefirst_layer_output);
+            delete_matrix(first_layer_output);
+            delete_matrix(presecond_layer_output);
+            delete_matrix(calculated_output);
+            delete_matrix(delta_second_layer);
+            delete_matrix(delta_first_layer);
+            delete_matrix(delta_second_weights);
+            delete_matrix(delta_second_biases);
+            delete_matrix(delta_first_weights);
+            delete_matrix(delta_first_biases);
         }
         
         if(j == EPOCHS - 1) {
@@ -86,10 +98,20 @@ int main() {
         int actual_species = get_max_row(output);
         correct_predictions += (species_prediction == actual_species);
 
+        delete_matrix(input);
+        delete_matrix(output);
+        delete_matrix(first_layer_output);
+        delete_matrix(calculated_output);
     }
 
     printf("Correct Test Predictions = %d\n", correct_predictions);
     printf("Test Accuracy = %lf\n", 1.0 * correct_predictions / TEST_SIZE);
+
+    delete_neuralnet(neuralnet);
+    delete_matrix(X_train);
+    delete_matrix(Y_train);
+    delete_matrix(X_test);
+    delete_matrix(Y_test);
 
     return 0;
 }
