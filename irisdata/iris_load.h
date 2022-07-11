@@ -1,8 +1,8 @@
 #ifndef IRIS_LOAD_H
 #define IRIS_LOAD_H
 
-#define TRAIN_SIZE 105
-#define TEST_SIZE 45
+#define TRAIN_SIZE 120
+#define TEST_SIZE 30
 
 enum Species {
     SETOSA, VERSICOLOR, VIRGINICA

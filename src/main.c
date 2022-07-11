@@ -56,7 +56,7 @@ int main() {
             // Backprop
             Matrix* delta_second_layer = get_delta_second_layer(calculated_output, output);
             Matrix* delta_first_layer = get_delta_first_layer(neuralnet, prefirst_layer_output, delta_second_layer);
-            Matrix* delta_second_weights = get_delta_second_weights(neuralnet, delta_second_layer, prefirst_layer_output);
+            Matrix* delta_second_weights = get_delta_second_weights(neuralnet, delta_second_layer, first_layer_output);
             Matrix* delta_second_biases = get_delta_second_biases(neuralnet, delta_second_layer);
             Matrix* delta_first_weights = get_delta_first_weights(neuralnet, delta_first_layer, input);
             Matrix* delta_first_biases = get_delta_first_biases(neuralnet, delta_first_layer);

@@ -36,8 +36,8 @@ Matrix* activate_matrix(Matrix* matrix) {
     Matrix* res = new_matrix(matrix->rows, matrix->columns);
     for (int i = 0; i < matrix->rows; i++) {
         for (int j = 0; j < matrix->columns; j++) {
-            // res->data[index_at(i, j, res)] = (matrix->data[index_at(i, j, matrix)] > 0) ? matrix->data[index_at(i, j, matrix)]:0;
-            res->data[index_at(i, j, res)] = tanh(matrix->data[index_at(i, j, matrix)]);
+             res->data[index_at(i, j, res)] = (matrix->data[index_at(i, j, matrix)] > 0) ? matrix->data[index_at(i, j, matrix)]:0;
+            // res->data[index_at(i, j, res)] = tanh(matrix->data[index_at(i, j, matrix)]);
         }
     }
     return res;
@@ -47,8 +47,8 @@ Matrix* der_activate_matrix(Matrix* matrix) {
     Matrix* res = new_matrix(matrix->rows, matrix->columns);
     for (int i = 0; i < matrix->rows; i++) {
         for (int j = 0; j < matrix->columns; j++) {
-            //res->data[index_at(i, j, res)] = (matrix->data[index_at(i, j, matrix)] > 0) ? 1:0;
-            res->data[index_at(i, j, res)] = 1 - tanh(matrix->data[index_at(i, j, matrix)]) * tanh(matrix->data[index_at(i, j, matrix)]);
+            res->data[index_at(i, j, res)] = (matrix->data[index_at(i, j, matrix)] > 0) ? 1:0;
+            //res->data[index_at(i, j, res)] = 1 - tanh(matrix->data[index_at(i, j, matrix)]) * tanh(matrix->data[index_at(i, j, matrix)]);
         }
     }
     return res;
@@ -131,8 +131,8 @@ Matrix* get_delta_second_biases(NeuralNet* neuralnet, Matrix* delta_second_layer
     return multiply_by_scalar(delta_second_layer, -neuralnet->learning_rate);
 }
 
-Matrix* get_delta_first_layer(NeuralNet* neuralnet, Matrix* first_layer_output, Matrix* delta_second_layer) {
-    return multiply_elementwise(multiply(transpose(neuralnet->weights[1]), delta_second_layer), der_activate_matrix(first_layer_output));
+Matrix* get_delta_first_layer(NeuralNet* neuralnet, Matrix* prefirst_layer_output, Matrix* delta_second_layer) {
+    return multiply_elementwise(multiply(transpose(neuralnet->weights[1]), delta_second_layer), der_activate_matrix(prefirst_layer_output));
 }
 
 Matrix* get_delta_first_weights(NeuralNet* neuralnet, Matrix* delta_first_layer, Matrix* input) {

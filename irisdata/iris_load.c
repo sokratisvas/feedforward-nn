@@ -206,10 +206,8 @@ int main() {
     int output_train_data[TRAIN_SIZE];
     double input_test_data[TEST_SIZE][4];
     int output_test_data[TEST_SIZE];
-
     srand(time(NULL));
     load_train_test_data(input_train_data, output_train_data, input_test_data, output_test_data);
-
     return 0;
 }
 */
